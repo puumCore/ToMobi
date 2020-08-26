@@ -20,7 +20,11 @@
                   <HBox alignment="CENTER_LEFT" spacing="30.0">
                      <children>
                         <Label fx:id="infoLbl" prefHeight="28.0" prefWidth="282.0" styleClass="upload_info" text="Label" />
+<<<<<<< HEAD
                         <JFXButton focusTraversable="false" onAction="#terminate" prefHeight="28.0" prefWidth="62.0" ripplerFill="#ff9f9f" style="-fx-background-radius: 0px; -fx-border-color: #ff9f9f;" styleClass="stop_btn" text="Stop" textFill="#f55e5e" />
+=======
+                        <JFXButton focusTraversable="false" onAction="#terminate" prefHeight="28.0" prefWidth="62.0" ripplerFill="#ff9f9f" style="-fx-background-radius: 0px;" styleClass="stop_btn" text="Stop" />
+>>>>>>> 117a0bc... Initial commit
                      </children>
                   </HBox>
                   <Label fx:id="statusLbl" prefWidth="374.0" styleClass="upload_size" text="Label" />
