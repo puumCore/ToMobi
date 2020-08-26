@@ -1,0 +1,43 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="ToMobi">
+    <output-path>$PROJECT_DIR$/out/artifacts/ToMobi</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="alias" value="" />
+        <option name="appClass" value="com._toMobi.Main" />
+        <option name="convertCss2Bin" value="true" />
+        <option name="description" value="Used for transfering files from a desktop or laptop to your mobile phone." />
+        <option name="enabledSigning" value="true" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="icons">
+          <JavaFxApplicationIcons>
+            <option name="windowsIcon" value="$PROJECT_DIR$/src/com/_toMobi/_images/_other/toMobi.ico" />
+          </JavaFxApplicationIcons>
+        </option>
+        <option name="keystore" value="" />
+        <option name="nativeBundle" value="all" />
+        <option name="title" value="To Mobi" />
+        <option name="vendor" value="Mandela Murithi" />
+        <option name="version" value="1.0.0" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="ToMobi.jar">
+        <element id="module-output" name="ToMobi" />
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+      </element>
+      <element id="directory" name="lib">
+        <element id="library" level="application" name="annotations-17.0.0" />
+        <element id="library" level="application" name="AnimateFX-1.2.0" />
+        <element id="library" level="application" name="commons-io-2.6_COPY_FILES_FROM_PLACE_TO_PLACE" />
+        <element id="library" level="application" name="controlsfx-8.40.11" />
+        <element id="library" level="application" name="gson-2.8.2" />
+        <element id="library" level="application" name="jfoenix-8.0.8" />
+        <element id="library" level="application" name="spark-core 2.9.1 maven" />
+        <element id="library" level="application" name="SL4J" />
+      </element>
+    </root>
+  </artifact>
+</component>
