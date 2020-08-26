@@ -73,23 +73,57 @@
    -fx-background-color: transparent;
 }
 
-.scroll-bar:horizontal,
-.scroll-bar:vertical {
-    -fx-background-color: transparent;
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color :transparent;
+    -fx-border-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-border-radius :2.0em;
+
 }
 
-.scroll-bar:horizontal.track,
-.scroll-bar:vertical.track {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-background-radius: 0em;
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+ .scroll-bar .increment-arrow,
+ .scroll-bar .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.15em 0.0;
+}
+
+ .scroll-bar:vertical .increment-arrow,
+ .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.15em;
 }
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color: linear-gradient(#155CDE, #1F7FE5, #279CEB, #2CAFEF, #2EB5F0);
-    -fx-background-radius: 5em;
+    -fx-background-color :linear-gradient(#155CDE, #1F7FE5, #279CEB, #2CAFEF, #2EB5F0);;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
 }
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
 
 .scroll-bar:vertical {
     -fx-pref-width: 16.5;
@@ -99,10 +133,4 @@
 .scroll-bar:horizontal {
     -fx-pref-height: 16.5;
     -fx-padding: 3;
-}
-
-.scroll-bar,
-.scroll-bar:pressed,
-.scroll-bar:focused {
-    -fx-font-size: 15;
 }
