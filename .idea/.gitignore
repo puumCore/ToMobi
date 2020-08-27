@@ -1,2 +1,12 @@
 # Default ignored files
-/*
+/artifacts/*
+/dictionaries/*
+/compiler.xml
+description.html
+encodings.xml
+gradle.xml
+misc.xml
+modules.xml
+uiDesigner.xml
+vcs.xml
+workspace.xml
