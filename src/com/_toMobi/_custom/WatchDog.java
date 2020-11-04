@@ -24,76 +24,9 @@ import java.util.Calendar;
  * @version 1.1.2
  */
 
-public class WatchDog {
+public abstract class WatchDog extends Assistant {
 
-    private final String PATH_TO_ERROR_FOLDER = Main.RESOURCE_PATH.getAbsolutePath() + "\\_watchDog\\_error\\";
-
-    protected final boolean the_file_has_zero_bytes(@NotNull File file) {
-        return get_size_of_the_provided_file_or_folder(file) == 0;
-    }
-
-    protected final double get_size_of_the_provided_file_or_folder(@NotNull File file) {
-        double bytes = 0;
-        if (file.isFile()) {
-            bytes = file.length();
-        } else {
-            if (file.isDirectory()) {
-                final File[] fileList = file.listFiles();
-                if (fileList != null) {
-                    for (File file1 : fileList) {
-                        bytes += get_size_of_the_provided_file_or_folder(file1);
-                    }
-                }
-            }
-        }
-        return bytes;
-    }
-
-    protected final @NotNull String make_bytes_more_presentable(double bytes) {
-        final double kilobytes = (bytes / 1024);
-        final double megabytes = (kilobytes / 1024);
-        final double gigabytes = (megabytes / 1024);
-        final double terabytes = (gigabytes / 1024);
-        final double petabytes = (terabytes / 1024);
-        final double exabytes = (petabytes / 1024);
-        final double zettabytes = (exabytes / 1024);
-        final double yottabytes = (zettabytes / 1024);
-        String result;
-        if (((int) yottabytes) > 0) {
-            result = String.format("%,.2f", yottabytes).concat(" YB");
-            return result;
-        }
-        if (((int) zettabytes) > 0) {
-            result = String.format("%,.2f", zettabytes).concat(" ZB");
-            return result;
-        }
-        if (((int) exabytes) > 0) {
-            result = String.format("%,.2f", exabytes).concat(" EB");
-            return result;
-        }
-        if (((int) petabytes) > 0) {
-            result = String.format("%,.2f", petabytes).concat(" PB");
-            return result;
-        }
-        if (((int) terabytes) > 0) {
-            result = String.format("%,.2f", terabytes).concat(" TB");
-            return result;
-        }
-        if (((int) gigabytes) > 0) {
-            result = String.format("%,.2f", gigabytes).concat(" GB");
-            return result;
-        }
-        if (((int) megabytes) > 0) {
-            result = String.format("%,.2f", megabytes).concat(" MB");
-            return result;
-        }
-        if (((int) kilobytes) > 0) {
-            result = String.format("%,.2f", kilobytes).concat(" KB");
-            return result;
-        }
-        result = String.format("%,.0f", bytes).concat(" Bytes");
-        return result;
-    }
+    private final String PATH_TO_ERROR_FOLDER = Main.RESOURCE_PATH.getAbsolutePath().concat("\\_watchDog\\_error\\");
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -104,7 +37,7 @@ public class WatchDog {
     protected final void write_stack_trace(Exception exception) {
         BufferedWriter bw = null;
         try {
-            File log = new File(PATH_TO_ERROR_FOLDER.concat(gate_date_for_file_name().concat(" stackTrace_log.txt")));
+            File log = new File(format_path_name_to_current_os(PATH_TO_ERROR_FOLDER.concat(gate_date_for_file_name().concat(" stackTrace_log.txt"))));
             if (!log.exists()) {
                 FileWriter fw = new FileWriter(log);
                 fw.write("\nThis is a newly created file [ " + time_stamp() + " ].");
@@ -175,16 +108,20 @@ public class WatchDog {
     }
 
     protected final void information_message(String message) {
-        try {
-            SystemTray systemTray = SystemTray.getSystemTray();
-            java.awt.image.BufferedImage bufferedImage = ImageIO.read(getClass().getResource("/com/_toMobi/_images/_other/toMobi.png"));
-            TrayIcon trayIcon = new TrayIcon(bufferedImage);
-            trayIcon.setImageAutoSize(true);
-            systemTray.add(trayIcon);
-            trayIcon.displayMessage("Information", message, TrayIcon.MessageType.NONE);
-        } catch (IOException | AWTException exception) {
-            exception.printStackTrace();
-            programmer_error(exception).show();
+        if (get_slash_for_my_os().equals("\\")) { //if its a windows os
+            try {
+                SystemTray systemTray = SystemTray.getSystemTray();
+                java.awt.image.BufferedImage bufferedImage = ImageIO.read(getClass().getResource("/com/_toMobi/_images/_other/toMobi.png"));
+                TrayIcon trayIcon = new TrayIcon(bufferedImage);
+                trayIcon.setImageAutoSize(true);
+                systemTray.add(trayIcon);
+                trayIcon.displayMessage("Information", message, TrayIcon.MessageType.NONE);
+            } catch (IOException | AWTException exception) {
+                exception.printStackTrace();
+                programmer_error(exception).show();
+            }
+        } else {
+            warning_message("Information!", message).graphic(null).show();
         }
     }
 

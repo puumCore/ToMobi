@@ -4,7 +4,7 @@ import animatefx.animation.SlideInLeft;
 import com._toMobi.Main;
 import com._toMobi._custom.WatchDog;
 import com._toMobi._object.Job;
-import com._toMobi._server.Uploader;
+import com._toMobi.api.Server;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -22,6 +22,7 @@ import spark.Spark;
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -77,7 +78,7 @@ public class Controller extends WatchDog implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            new Uploader();
+            new Server();
         } catch (Exception e) {
             e.printStackTrace();
             new Thread(stack_trace_printing(e)).start();
@@ -103,14 +104,14 @@ public class Controller extends WatchDog implements Initializable {
             protected Object call() {
                 while (true) {
                     try {
-                        final String ipV4 = Inet4Address.getLocalHost().getHostAddress();
+                        final String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
                         if (!ipAddressLbl.getText().trim().contains(ipV4)) {
                             Platform.runLater(() -> ipAddressLbl.setText("http://".concat(ipV4).concat(":" + Spark.port()).concat("/toMobi/api/download")));
                         }
                         Thread.sleep(500);
                     } catch (UnknownHostException e) {
                         Platform.runLater(() -> ipAddressLbl.setText("Host Address was not found!"));
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException | SocketException e) {
                         e.printStackTrace();
                         new Thread(stack_trace_printing(e)).start();
                         Platform.runLater(() -> programmer_error(e).show());

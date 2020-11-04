@@ -32,7 +32,7 @@ public class Main extends Application {
             primaryStage.setY(event1.getScreenY() - yOffset);
         });
         scene.setFill(Color.web("#FFFFFF", 0));
-        primaryStage.setTitle("");
+        primaryStage.setTitle("To Mobi");
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
         primaryStage.initStyle(StageStyle.DECORATED);

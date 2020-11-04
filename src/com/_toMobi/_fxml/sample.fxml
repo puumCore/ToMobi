@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
 <!--suppress JavaFxDefaultTag -->
 
@@ -19,6 +20,14 @@
             <Image url="@../_images/_other/home_background.png" />
          </image>
       </ImageView>
+      <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="64.0">
+         <children>
+            <SVGPath content="M20.7104 6.55C23.8358 2.56707 28.6805 0 34.1354 0C43.0826 0 50.4102 6.8884 51.1313 15.65C56.5777 17.5423 60.3604 22.9934 59.6521 29.2292C58.9097 35.7636 53.0583 40.5333 46.4813 40.5333L32.0021 40.5333L32.0021 25.6C32.0021 24.4224 31.0464 23.4667 29.8688 23.4667C28.6912 23.4667 27.7354 24.4224 27.7354 25.6L27.7354 40.5333L13.2604 40.5333C6.67058 40.5333 0.808745 35.7452 0.081278 29.1958C-0.612055 22.9473 3.20501 17.4895 8.68128 15.625C9.39168 10.4218 13.8048 6.4 19.2021 6.4C19.7184 6.4 20.2134 6.4796 20.7104 6.55ZM27.7354 40.5333L27.7354 52.45L22.8437 47.5583C22.4421 47.1455 21.8906 46.9125 21.3146 46.9125C20.4465 46.9127 19.6651 47.4389 19.3384 48.2432C19.0117 49.0475 19.205 49.9695 19.8271 50.575L28.3604 59.1083C29.1935 59.9411 30.5439 59.9411 31.3771 59.1083L39.9104 50.575C40.4677 50.0399 40.6922 49.2454 40.4973 48.4978C40.3024 47.7502 39.7186 47.1663 38.971 46.9714C38.2234 46.7765 37.4288 47.001 36.8937 47.5583L32.0021 52.45L32.0021 40.5333L27.7354 40.5333Z" style="-fx-fill: linear-gradient(#155CDE, #1F7FE5, #279CEB, #2CAFEF, #2EB5F0);" />
+         </children>
+         <StackPane.margin>
+            <Insets bottom="600.0" />
+         </StackPane.margin>
+      </StackPane>
       <AnchorPane StackPane.alignment="CENTER">
          <children>
             <JFXButton focusTraversable="false" layoutY="189.0" onAction="#choose_files" prefHeight="50.0" style="-fx-background-color: #155CDE; -fx-background-radius: 0px;" styleClass="choose_buttons" text="Select file(s)" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />

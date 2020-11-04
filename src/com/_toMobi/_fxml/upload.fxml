@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -11,20 +10,16 @@
 
 <!--suppress JavaFxDefaultTag -->
 
-<StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="378.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px;" stylesheets="@../_css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com._toMobi._controller.UploadTask">
+<StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="378.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0px;" stylesheets="@../_css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com._toMobi._controller.UploadTask">
    <children>
       <AnchorPane>
          <children>
             <VBox alignment="CENTER" layoutX="7.0" layoutY="7.0" prefHeight="76.0" prefWidth="362.0" spacing="15.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="30.0">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label fx:id="infoLbl" prefHeight="28.0" prefWidth="282.0" styleClass="upload_info" text="Label" />
-<<<<<<< HEAD
+                        <Label fx:id="infoLbl" prefHeight="28.0" prefWidth="292.0" styleClass="upload_info" text="Label" />
                         <JFXButton focusTraversable="false" onAction="#terminate" prefHeight="28.0" prefWidth="62.0" ripplerFill="#ff9f9f" style="-fx-background-radius: 0px; -fx-border-color: #ff9f9f;" styleClass="stop_btn" text="Stop" textFill="#f55e5e" />
-=======
-                        <JFXButton focusTraversable="false" onAction="#terminate" prefHeight="28.0" prefWidth="62.0" ripplerFill="#ff9f9f" style="-fx-background-radius: 0px;" styleClass="stop_btn" text="Stop" />
->>>>>>> 117a0bc... Initial commit
                      </children>
                   </HBox>
                   <Label fx:id="statusLbl" prefWidth="374.0" styleClass="upload_size" text="Label" />
@@ -34,7 +29,4 @@
          </children>
       </AnchorPane>
    </children>
-   <effect>
-      <DropShadow color="#0000004d" />
-   </effect>
 </StackPane>

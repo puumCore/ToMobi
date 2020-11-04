@@ -1,19 +1,23 @@
-package com._toMobi._server;
+package com._toMobi.api;
 
 import com._toMobi._controller.Controller;
 import com._toMobi._custom.WatchDog;
 import com._toMobi._object.Job;
-import com._toMobi._server._response_model.StandardResponse;
-import com._toMobi._server._response_model.StatusResponse;
+import com._toMobi.api._response_model.StandardResponse;
+import com._toMobi.api._response_model.StatusResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 import spark.Spark;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.Inet4Address;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.*;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
@@ -23,7 +27,7 @@ import static spark.Spark.port;
  * @version 1.0.0
  */
 
-public class Uploader extends WatchDog {
+public class Server extends WatchDog {
 
     /**
      * Accessible url is <a href=http://localhost:3781/toMobi/api><strong>Core URL</strong></a>
@@ -31,7 +35,7 @@ public class Uploader extends WatchDog {
 
     public static String fileRequestedByMobile;
 
-    public Uploader() {
+    public Server() {
         port(3781);
         final String CONTEXT_PATH = "/toMobi/api";
         get(CONTEXT_PATH.concat("/download"), ((request, response) -> {
@@ -43,8 +47,7 @@ public class Uploader extends WatchDog {
                     jsonObject.add("result", new Gson().toJsonTree("No file has been selected!", String.class));
                 } else {
                     jsonObject.add("result", jsonArray);
-                    final String ipV4 = Inet4Address.getLocalHost().getHostAddress();
-                    jsonObject.add("info", new Gson().toJsonTree("Download your desired file using ".concat("http://".concat(ipV4).concat(":" + Spark.port()).concat("/toMobi/api/download/:fileName")), String.class));
+                    jsonObject.add("info", new Gson().toJsonTree("Use the urls to download the files", String.class));
 
                 }
                 response.status(HttpURLConnection.HTTP_OK);
@@ -86,10 +89,12 @@ public class Uploader extends WatchDog {
         }));
     }
 
-    private @NotNull JsonArray get_list_of_pending_uploads() {
+    private @NotNull JsonArray get_list_of_pending_uploads() throws SocketException, UnknownHostException {
         final JsonArray jsonArray = new JsonArray();
         for (String string : Controller.jobList.keySet()) {
-            jsonArray.add(new Gson().toJsonTree(string, String.class));
+            String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
+            String downloadUrl = "http://".concat(ipV4).concat(":" + port()).concat("/toMobi/api/download/".concat(string));
+            jsonArray.add(new Gson().toJsonTree(downloadUrl, String.class));
         }
         return jsonArray;
     }

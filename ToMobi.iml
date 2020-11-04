@@ -7,13 +7,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="gson-2.8.2" level="application" />
+    <orderEntry type="library" exported="" name="AnimateFX-1.2.0" level="application" />
+    <orderEntry type="library" exported="" name="controlsfx-8.40.11" level="application" />
+    <orderEntry type="library" exported="" name="fontawesomefx-8.9" level="application" />
+    <orderEntry type="library" exported="" name="commons-io-2.6" level="application" />
     <orderEntry type="library" name="annotations-17.0.0" level="application" />
-    <orderEntry type="library" name="AnimateFX-1.2.0" level="application" />
-    <orderEntry type="library" name="commons-io-2.6_COPY_FILES_FROM_PLACE_TO_PLACE" level="application" />
-    <orderEntry type="library" name="controlsfx-8.40.11" level="application" />
-    <orderEntry type="library" name="gson-2.8.2" level="application" />
+    <orderEntry type="library" name="spark-core JAR 2.9" level="application" />
     <orderEntry type="library" name="jfoenix-8.0.8" level="application" />
-    <orderEntry type="library" name="spark-core 2.9.1 maven" level="application" />
-    <orderEntry type="library" name="SL4J" level="application" />
+    <orderEntry type="library" name="slf4j" level="application" />
   </component>
 </module>

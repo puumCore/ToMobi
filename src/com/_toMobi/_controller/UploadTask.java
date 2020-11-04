@@ -4,7 +4,7 @@ import animatefx.animation.SlideOutLeft;
 import animatefx.animation.SlideOutRight;
 import com._toMobi._custom.WatchDog;
 import com._toMobi._object.Job;
-import com._toMobi._server.Uploader;
+import com._toMobi.api.Server;
 import com.jfoenix.controls.JFXProgressBar;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -100,10 +100,10 @@ public class UploadTask extends WatchDog implements Initializable {
                 while (true) {
                     Thread.sleep(500);
                     updateProgress(0, 1);
-                    if (Uploader.fileRequestedByMobile != null) {
-                        if (Controller.jobList.containsKey(Uploader.fileRequestedByMobile)) {
-                            if (Controller.jobList.get(myFileName).getJobName().equals(Uploader.fileRequestedByMobile)) {
-                                Uploader.fileRequestedByMobile = null;
+                    if (Server.fileRequestedByMobile != null) {
+                        if (Controller.jobList.containsKey(Server.fileRequestedByMobile)) {
+                            if (Controller.jobList.get(myFileName).getJobName().equals(Server.fileRequestedByMobile)) {
+                                Server.fileRequestedByMobile = null;
                                 break;
                             }
                         }
