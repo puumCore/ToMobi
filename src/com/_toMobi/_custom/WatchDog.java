@@ -121,7 +121,7 @@ public abstract class WatchDog extends Assistant {
                 programmer_error(exception).show();
             }
         } else {
-            warning_message("Information!", message).graphic(null).show();
+            warning_message("Information!", "\n".concat(message)).graphic(null).showInformation();
         }
     }
 

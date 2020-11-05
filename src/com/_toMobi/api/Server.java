@@ -9,15 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
-import spark.Spark;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.*;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import static spark.Spark.get;
 import static spark.Spark.port;

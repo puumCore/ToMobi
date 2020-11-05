@@ -96,9 +96,13 @@ public class UploadTask extends WatchDog implements Initializable {
         final double TOTAL_SIZE_IN_MB = ((jobSizeAsBytes / 1024) / 1024);
         return new Task<Object>() {
             @Override
-            protected Object call() throws InterruptedException {
+            protected Object call() {
                 while (true) {
-                    Thread.sleep(500);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // restore interrupted status
+                    }
                     updateProgress(0, 1);
                     if (Server.fileRequestedByMobile != null) {
                         if (Controller.jobList.containsKey(Server.fileRequestedByMobile)) {
@@ -111,7 +115,11 @@ public class UploadTask extends WatchDog implements Initializable {
                 }
                 double megabytes = 0;
                 while (megabytes <= TOTAL_SIZE_IN_MB) {
-                    Thread.sleep(500);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // restore interrupted status
+                    }
                     myJob.setByteSent(Controller.jobList.get(UploadTask.this.myFileName).getByteSent());
                     double bytes = myJob.getByteSent();
                     double kilobytes = (bytes / 1024);
