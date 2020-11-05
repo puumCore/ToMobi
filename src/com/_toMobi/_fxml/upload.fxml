@@ -14,16 +14,16 @@
    <children>
       <AnchorPane>
          <children>
-            <VBox alignment="CENTER" layoutX="7.0" layoutY="7.0" prefHeight="76.0" prefWidth="362.0" spacing="15.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+            <VBox alignment="CENTER" layoutX="7.0" layoutY="7.0" prefHeight="77.0" prefWidth="350.0" spacing="15.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="7.0">
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="321.0" spacing="10.0">
                      <children>
-                        <Label fx:id="infoLbl" prefHeight="28.0" prefWidth="292.0" styleClass="upload_info" text="Label" />
+                        <Label fx:id="infoLbl" prefHeight="28.0" prefWidth="276.0" styleClass="upload_info" text="Label" />
                         <JFXButton focusTraversable="false" onAction="#terminate" prefHeight="28.0" prefWidth="62.0" ripplerFill="#ff9f9f" style="-fx-background-radius: 0px; -fx-border-color: #ff9f9f;" styleClass="stop_btn" text="Stop" textFill="#f55e5e" />
                      </children>
                   </HBox>
-                  <Label fx:id="statusLbl" prefWidth="374.0" styleClass="upload_size" text="Label" />
-                  <JFXProgressBar fx:id="progressBar" prefHeight="3.0" prefWidth="372.0" progress="0.56" styleClass="progBar" />
+                  <Label fx:id="statusLbl" prefHeight="14.0" prefWidth="355.0" styleClass="upload_size" text="Label" />
+                  <JFXProgressBar fx:id="progressBar" prefHeight="3.0" prefWidth="351.0" progress="0.56" styleClass="progBar" />
                </children>
             </VBox>
          </children>
