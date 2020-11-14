@@ -1,27 +1,25 @@
 package com._toMobi._object;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Mandela aka puumInc
- * @version 1.1.2
  */
-public class Job implements Serializable {
+public class UploadFile implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
-    private String jobName;
+    private String name;
     private String filePath;
     private double sourceSize;
     private double byteSent;
 
-    public String getJobName() {
-        return jobName;
+    public String getName() {
+        return name;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getFilePath() {

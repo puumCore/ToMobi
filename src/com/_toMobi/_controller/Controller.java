@@ -3,7 +3,7 @@ package com._toMobi._controller;
 import animatefx.animation.SlideInLeft;
 import com._toMobi.Main;
 import com._toMobi._custom.WatchDog;
-import com._toMobi._object.Job;
+import com._toMobi._object.UploadFile;
 import com._toMobi.api.Server;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -21,7 +21,6 @@ import spark.Spark;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -32,9 +31,8 @@ import java.util.TreeMap;
 
 public class Controller extends WatchDog implements Initializable {
 
+    public static final Map<String, UploadFile> UPLOAD_FILE_MAP = new TreeMap<>();
     private String recentDirectory = null;
-    public static Map<String, Job> jobList = new TreeMap<>();
-
     @FXML
     private Label ipAddressLbl;
 
@@ -55,6 +53,7 @@ public class Controller extends WatchDog implements Initializable {
         final List<File> selectedFiles = fileChooser.showOpenMultipleDialog(Main.stage);
         if (selectedFiles == null) {
             error_message("Invalid directory!", "Sadly no directory was selected to save the selected media").show();
+            event.consume();
             return;
         }
         for (File selectedFile : selectedFiles) {
@@ -72,6 +71,7 @@ public class Controller extends WatchDog implements Initializable {
                 }
             }
         }
+        event.consume();
     }
 
 
@@ -124,17 +124,17 @@ public class Controller extends WatchDog implements Initializable {
     }
 
     private void push_to_waiting_bay(String filePath) {
-        final Job job = new Job();
-        job.setJobName(new File(filePath).getName());
-        job.setFilePath(filePath);
-        job.setSourceSize(get_size_of_the_selected_file(new File(filePath)));
-        if (jobList.containsKey(job.getJobName())) {
+        final UploadFile uploadFile = new UploadFile();
+        uploadFile.setName(new File(filePath).getName());
+        uploadFile.setFilePath(filePath);
+        uploadFile.setSourceSize(get_size_of_the_selected_file(new File(filePath)));
+        if (Controller.UPLOAD_FILE_MAP.containsKey(uploadFile.getName())) {
             warning_message("Can't continue!", "The file is already at the waiting bay").show();
             return;
         }
         try {
-            jobList.put(job.getJobName(), job);
-            UploadTask.fileName = job.getJobName();
+            Controller.UPLOAD_FILE_MAP.put(uploadFile.getName(), uploadFile);
+            UploadTask.fileName = uploadFile.getName();
             final Node node = FXMLLoader.load(getClass().getResource("/com/_toMobi/_fxml/upload.fxml"));
             Platform.runLater(() -> {
                 waitingBox.getChildren().add(node);

@@ -1,17 +1,110 @@
 package com._toMobi._custom;
 
+import com._toMobi.Main;
+import com._toMobi._controller.Controller;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Enumeration;
+import java.util.HashMap;
+
+import static spark.Spark.port;
 
 /**
  * @author edgar
  */
 public abstract class Assistant {
 
-    protected InetAddress get_first_nonLoopback_address(boolean preferIpv4, boolean preferIPv6) throws SocketException, UnknownHostException {
+    protected final String CONTEXT_PATH = "/toMobi/api/download";
+
+
+    protected JsonArray get_list_of_pending_uploads() throws SocketException, UnknownHostException {
+        final JsonArray jsonArray = new JsonArray();
+        for (String string : Controller.UPLOAD_FILE_MAP.keySet()) {
+            String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
+            String downloadUrl = "http://".concat(ipV4).concat(":" + port()).concat(CONTEXT_PATH.concat("/").concat(string));
+            jsonArray.add(new Gson().toJsonTree(downloadUrl, String.class));
+        }
+        return jsonArray;
+    }
+
+    protected HashMap<String, String> create_id_to_url_map(JsonArray urlsOfPendingUploads) {
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        if (urlsOfPendingUploads.size() > 0) {
+            urlsOfPendingUploads.forEach(jsonElement -> {
+                stringStringHashMap.put(get_unique_word_as_key(stringStringHashMap),
+                        new Gson().fromJson(jsonElement, String.class));
+            });
+        }
+        return stringStringHashMap;
+    }
+
+    private String get_unique_word_as_key(HashMap<String, String> stringStringHashMap) {
+        String newKey = RandomStringUtils.randomAlphabetic(10);
+        if (stringStringHashMap.isEmpty()) {
+            return newKey;
+        } else if (stringStringHashMap.containsKey(newKey)) {
+            get_unique_word_as_key(stringStringHashMap);
+        } else {
+            return newKey;
+        }
+        return newKey;
+    }
+
+    protected Alert show_qr_image_for_upload(File imageFile) throws FileNotFoundException {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initOwner(Main.stage);
+        alert.setTitle(Main.stage.getTitle());
+        alert.setHeaderText("Scan the QR code and open it in your browser");
+        alert.setContentText("Click \"Show details\"");
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(350);
+        imageView.setFitWidth(350);
+        imageView.setImage(new Image(new FileInputStream(imageFile)));
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(imageView);
+        stackPane.setMaxSize(imageView.getFitWidth(), imageView.getFitHeight());
+        stackPane.setStyle("-fx-background-color: #FFFFFF;");
+        alert.getDialogPane().setExpandableContent(stackPane);
+        return alert;
+    }
+
+    protected File get_a_qr_image_file_that_has_an_embedded_logo(final String jobName) {
+        try {
+            final QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            final BitMatrix bitMatrix = qrCodeWriter.encode(jobName, BarcodeFormat.QR_CODE, 350, 350);
+            //write to png file
+            final File file = new File(Main.RESOURCE_PATH.getAbsolutePath().concat("\\_address\\").concat(RandomStringUtils.randomAlphabetic(10)).concat(".png"));
+            final Path path = FileSystems.getDefault().getPath(file.getAbsolutePath());
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            return file;
+        } catch (WriterException | IOException e) {
+            e.printStackTrace();
+            new Thread(new WatchDog().stack_trace_printing(e)).start();
+            new WatchDog().programmer_error(e).show();
+        }
+        return null;
+    }
+
+    protected final InetAddress get_first_nonLoopback_address(boolean preferIpv4, boolean preferIPv6) throws SocketException, UnknownHostException {
         InetAddress result = InetAddress.getLocalHost();
         Enumeration<NetworkInterface> networkInterfaceEnumeration = NetworkInterface.getNetworkInterfaces();
         while (networkInterfaceEnumeration.hasMoreElements()) {

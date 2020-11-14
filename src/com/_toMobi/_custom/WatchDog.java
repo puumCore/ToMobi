@@ -24,9 +24,9 @@ import java.util.Calendar;
  * @version 1.1.2
  */
 
-public abstract class WatchDog extends Assistant {
+public class WatchDog extends Assistant {
 
-    private final String PATH_TO_ERROR_FOLDER = Main.RESOURCE_PATH.getAbsolutePath().concat("\\_watchDog\\_error\\");
+    private final String PATH_TO_ERROR_FOLDER = Main.RESOURCE_PATH.getAbsolutePath() + "\\_watchDog\\_error\\";
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -34,10 +34,10 @@ public abstract class WatchDog extends Assistant {
         return () -> write_stack_trace(exception);
     }
 
-    protected final void write_stack_trace(Exception exception) {
+    private void write_stack_trace(Exception exception) {
         BufferedWriter bw = null;
         try {
-            File log = new File(format_path_name_to_current_os(PATH_TO_ERROR_FOLDER.concat(gate_date_for_file_name().concat(" stackTrace_log.txt"))));
+            File log = new File(PATH_TO_ERROR_FOLDER.concat(gate_date_for_file_name().concat(" stackTrace_log.txt")));
             if (!log.exists()) {
                 FileWriter fw = new FileWriter(log);
                 fw.write("\nThis is a newly created file [ " + time_stamp() + " ].");
