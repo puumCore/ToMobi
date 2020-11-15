@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
+import spark.Spark;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,9 +25,6 @@ import java.net.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Enumeration;
-import java.util.HashMap;
-
-import static spark.Spark.port;
 
 /**
  * @author edgar
@@ -40,33 +38,10 @@ public abstract class Assistant {
         final JsonArray jsonArray = new JsonArray();
         for (String string : Controller.UPLOAD_FILE_MAP.keySet()) {
             String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
-            String downloadUrl = "http://".concat(ipV4).concat(":" + port()).concat(CONTEXT_PATH.concat("/").concat(string));
+            String downloadUrl = "http://".concat(ipV4).concat(":" + Spark.port()).concat(CONTEXT_PATH.concat("/").concat(string));
             jsonArray.add(new Gson().toJsonTree(downloadUrl, String.class));
         }
         return jsonArray;
-    }
-
-    protected HashMap<String, String> create_id_to_url_map(JsonArray urlsOfPendingUploads) {
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        if (urlsOfPendingUploads.size() > 0) {
-            urlsOfPendingUploads.forEach(jsonElement -> {
-                stringStringHashMap.put(get_unique_word_as_key(stringStringHashMap),
-                        new Gson().fromJson(jsonElement, String.class));
-            });
-        }
-        return stringStringHashMap;
-    }
-
-    private String get_unique_word_as_key(HashMap<String, String> stringStringHashMap) {
-        String newKey = RandomStringUtils.randomAlphabetic(10);
-        if (stringStringHashMap.isEmpty()) {
-            return newKey;
-        } else if (stringStringHashMap.containsKey(newKey)) {
-            get_unique_word_as_key(stringStringHashMap);
-        } else {
-            return newKey;
-        }
-        return newKey;
     }
 
     protected Alert show_qr_image_for_upload(File imageFile) throws FileNotFoundException {
@@ -92,7 +67,14 @@ public abstract class Assistant {
             final QRCodeWriter qrCodeWriter = new QRCodeWriter();
             final BitMatrix bitMatrix = qrCodeWriter.encode(jobName, BarcodeFormat.QR_CODE, 350, 350);
             //write to png file
-            final File file = new File(Main.RESOURCE_PATH.getAbsolutePath().concat("\\_address\\").concat(RandomStringUtils.randomAlphabetic(10)).concat(".png"));
+            final File file = new File(
+                    format_path_name_to_current_os(
+                            Main.RESOURCE_PATH.getAbsolutePath()
+                                    .concat("\\_address\\")
+                                    .concat(RandomStringUtils.randomAlphabetic(10))
+                                    .concat(".png")
+                    )
+            );
             final Path path = FileSystems.getDefault().getPath(file.getAbsolutePath());
             MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
             return file;
@@ -205,7 +187,7 @@ public abstract class Assistant {
         if (myOperatingSystemSlash == null) {
             return myPath;
         }
-        if (!myPath.contains(myOperatingSystemSlash)) {
+        if (!myOperatingSystemSlash.equals("\\")) {
             myPath = myPath.replace("\\", myOperatingSystemSlash);
         }
         return myPath;
@@ -213,6 +195,7 @@ public abstract class Assistant {
 
     String get_slash_for_my_os() {
         String OS = System.getProperty("os.name").toLowerCase();
+        System.out.println("OS = " + OS);
         if (OS.contains("win")) {
             //windows
             return "\\";

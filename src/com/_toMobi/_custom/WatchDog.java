@@ -37,7 +37,9 @@ public class WatchDog extends Assistant {
     private void write_stack_trace(Exception exception) {
         BufferedWriter bw = null;
         try {
-            File log = new File(PATH_TO_ERROR_FOLDER.concat(gate_date_for_file_name().concat(" stackTrace_log.txt")));
+            File log = new File(format_path_name_to_current_os(
+                    PATH_TO_ERROR_FOLDER.concat(gate_date_for_file_name().concat(" stackTrace_log.txt"))
+            ));
             if (!log.exists()) {
                 FileWriter fw = new FileWriter(log);
                 fw.write("\nThis is a newly created file [ " + time_stamp() + " ].");
