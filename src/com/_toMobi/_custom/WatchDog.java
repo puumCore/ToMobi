@@ -121,23 +121,19 @@ public class WatchDog extends Assistant {
                 programmer_error(exception).show();
             }
         } else {
-            warning_message("Information!", "\n".concat(message)).graphic(null).showInformation();
+            success_notification(message).show();
         }
     }
 
-    protected final void success_notification(String about) {
-        try {
-            SystemTray systemTray = SystemTray.getSystemTray();
-            java.awt.image.BufferedImage bufferedImage = ImageIO.read(getClass().getResource("/com/_toMobi/_images/_icons/icons8_Ok_48px.png"));
-            TrayIcon trayIcon = new TrayIcon(bufferedImage);
-            trayIcon.setImageAutoSize(true);
-            systemTray.add(trayIcon);
-            trayIcon.displayMessage("Success", about, TrayIcon.MessageType.NONE);
-        } catch (IOException | AWTException exception) {
-            exception.printStackTrace();
-            programmer_error(exception).show();
-        }
-    }
+    protected Notifications success_notification(String about) {
+        Image image = new Image("/com/_toMobi/_images/_icons/icons8_Ok_48px.png");
+        return Notifications.create()
+                .title("Success")
+                .text(about)
+                .graphic(new ImageView(image))
+                .hideAfter(Duration.seconds(8))
+                .position(Pos.TOP_RIGHT);
+            }
 
     protected final Notifications error_message(String title, String text) {
         Image image = new Image("/com/_toMobi/_images/_icons/icons8_Close_Window_48px.png");

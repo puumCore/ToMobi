@@ -1,6 +1,5 @@
 package com._toMobi._controller;
 
-import animatefx.animation.SlideOutLeft;
 import animatefx.animation.SlideOutRight;
 import com._toMobi._custom.WatchDog;
 import com._toMobi._object.UploadFile;
@@ -24,6 +23,7 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static spark.Spark.port;
 
@@ -35,7 +35,7 @@ import static spark.Spark.port;
 public class UploadTask extends WatchDog implements Initializable {
 
     protected static String fileName;
-    private Thread myThread;
+    private final AtomicBoolean readyToShutDown = new AtomicBoolean(false);
     private UploadFile myUploadFile;
     private String myFileName;
     private File QR_CODE_FILE_FOR_DOWNLOAD_URL;
@@ -54,9 +54,10 @@ public class UploadTask extends WatchDog implements Initializable {
         try {
             String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
             String downloadUrl = "http://".concat(ipV4).concat(":" + port()).concat(
-                    CONTEXT_PATH.concat("/").concat(URLEncoder.encode(this.myFileName, StandardCharsets.UTF_8.name())));
+                    CONTEXT_PATH.concat("/").concat(URLEncoder.encode(this.myFileName.replace(" ", "_"), StandardCharsets.UTF_8.name())));
             System.out.println("downloadUrl = " + downloadUrl);
             this.QR_CODE_FILE_FOR_DOWNLOAD_URL = get_a_qr_image_file_that_has_an_embedded_logo(downloadUrl);
+            this.QR_CODE_FILE_FOR_DOWNLOAD_URL.deleteOnExit();
         } catch (SocketException | UnknownHostException | UnsupportedEncodingException e) {
             e.printStackTrace();
             new Thread(stack_trace_printing(e)).start();
@@ -77,32 +78,23 @@ public class UploadTask extends WatchDog implements Initializable {
 
     @FXML
     void terminate(ActionEvent event) {
-        if (myThread == null) {
-            event.consume();
-            return;
-        }
-        myThread.interrupt();
-        myThread = null;
-        if (Controller.UPLOAD_FILE_MAP.remove(this.myUploadFile.getName()) != null) {
-            StackPane stackPane = (StackPane) statusLbl.getParent().getParent().getParent();
-            new SlideOutRight(stackPane).play();
-            VBox vBox = (VBox) stackPane.getParent();
-            Platform.runLater(() -> {
-                new SlideOutLeft(stackPane);
-                VBox.clearConstraints(stackPane);
-                vBox.getChildren().remove(stackPane);
-            });
-            information_message(this.myUploadFile.getName().concat(" has been removed"));
-            this.myUploadFile = null;
-            if (this.QR_CODE_FILE_FOR_DOWNLOAD_URL != null) {
-                if (!this.QR_CODE_FILE_FOR_DOWNLOAD_URL.delete()) {
-                    this.QR_CODE_FILE_FOR_DOWNLOAD_URL.deleteOnExit();
+        if (!readyToShutDown.get()) {
+            readyToShutDown.set(true);
+            if (Controller.UPLOAD_FILE_MAP.containsKey(this.myFileName)) {
+                if (Controller.UPLOAD_FILE_MAP.remove(this.myFileName) == null) {
+                    warning_message("Incomplete!", this.myUploadFile.getName().concat(" has is still at the waiting bay")).show();
+                    event.consume();
+                    return;
                 }
             }
-            event.consume();
-            return;
+            final StackPane instance = (StackPane) statusLbl.getParent().getParent().getParent();
+            final VBox vBox = (VBox) instance.getParent();
+            if (vBox != null) {
+                new SlideOutRight(instance).play();
+                VBox.clearConstraints(instance);
+                vBox.getChildren().remove(instance);
+            }
         }
-        warning_message("Incomplete!", this.myUploadFile.getName().concat(" has is still at yhe waiting bay")).show();
         event.consume();
     }
 
@@ -116,7 +108,11 @@ public class UploadTask extends WatchDog implements Initializable {
         Task<Object> animatedTask = upload_progress(this.myUploadFile.getSourceSize());
         animatedTask.setOnSucceeded(event -> {
             progressBar.progressProperty().unbind();
-            success_notification(this.myFileName.concat(" has been downloaded"));
+            if (progressBar.getProgress() == 1) {
+                information_message(this.myFileName.concat(" has been downloaded"));
+            } else {
+                information_message(this.myUploadFile.getName().concat(" has been removed"));
+            }
             terminate(new ActionEvent());
         });
         animatedTask.exceptionProperty().addListener(((observable, oldValue, newValue) -> {
@@ -130,8 +126,7 @@ public class UploadTask extends WatchDog implements Initializable {
             }
         }));
         progressBar.progressProperty().bind(animatedTask.progressProperty());
-        myThread = new Thread(animatedTask);
-        myThread.start();
+        new Thread(animatedTask).start();
     }
 
 
@@ -141,44 +136,47 @@ public class UploadTask extends WatchDog implements Initializable {
         return new Task<Object>() {
             @Override
             protected Object call() {
-                while (true) {
+                while (!readyToShutDown.get()) {
                     try {
                         Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt(); // restore interrupted status
-                    }
-                    updateProgress(0, 1);
-                    String fileRequested = Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.stream()
-                            .filter(nameOfAFileThatIsReadyForUpload -> nameOfAFileThatIsReadyForUpload
-                                    .equals(UploadTask.this.myFileName))
-                            .findAny().orElse(null);
-                    if (fileRequested != null) {
-                        if (Controller.UPLOAD_FILE_MAP.containsKey(fileRequested)) {
-                            if (Controller.UPLOAD_FILE_MAP.get(UploadTask.this.myFileName).getName().equals(fileRequested)) {
-                                Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.remove(UploadTask.this.myFileName);
-                                break;
+                        updateProgress(0, 1);
+                        String fileRequested = Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.stream()
+                                .filter(nameOfAFileThatIsReadyForUpload -> nameOfAFileThatIsReadyForUpload
+                                        .equals(UploadTask.this.myFileName))
+                                .findAny().orElse(null);
+                        if (fileRequested != null) {
+                            if (Controller.UPLOAD_FILE_MAP.containsKey(fileRequested)) {
+                                if (Controller.UPLOAD_FILE_MAP.get(UploadTask.this.myFileName).getName().equals(fileRequested)) {
+                                    Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.remove(UploadTask.this.myFileName);
+                                    break;
+                                }
                             }
                         }
-                    }
-                }
-                double megabytes = 0;
-                while (megabytes <= TOTAL_SIZE_IN_MB) {
-                    try {
-                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt(); // restore interrupted status
                     }
-                    UploadTask.this.myUploadFile.setByteSent(Controller.UPLOAD_FILE_MAP.get(UploadTask.this.myFileName).getByteSent());
-                    double bytes = UploadTask.this.myUploadFile.getByteSent();
-                    double kilobytes = (bytes / 1024);
-                    megabytes = (kilobytes / 1024);
-                    updateProgress(megabytes, TOTAL_SIZE_IN_MB);
-                    final double currentBytes = bytes;
-                    Platform.runLater(() -> statusLbl.setText("Uploaded ".concat(make_bytes_more_presentable(currentBytes)).concat(" of ").concat(make_bytes_more_presentable(jobSizeAsBytes))));
-                    if (megabytes == TOTAL_SIZE_IN_MB) {
-                        Controller.UPLOAD_FILE_MAP.remove(UploadTask.this.myFileName, UploadTask.this.myUploadFile);
-                        break;
+                }
+                if (!readyToShutDown.get()) {
+                    double megabytes = 0;
+                    while (megabytes <= TOTAL_SIZE_IN_MB) {
+                        if (readyToShutDown.get()) {
+                            break;
+                        }
+                        try {
+                            Thread.sleep(500);
+                            UploadTask.this.myUploadFile.setByteSent(Controller.UPLOAD_FILE_MAP.get(UploadTask.this.myFileName).getByteSent());
+                            double bytes = UploadTask.this.myUploadFile.getByteSent();
+                            double kilobytes = (bytes / 1024);
+                            megabytes = (kilobytes / 1024);
+                            updateProgress(megabytes, TOTAL_SIZE_IN_MB);
+                            final double currentBytes = bytes;
+                            Platform.runLater(() -> statusLbl.setText("Uploaded ".concat(make_bytes_more_presentable(currentBytes))
+                                    .concat(" of ").concat(make_bytes_more_presentable(jobSizeAsBytes))));
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt(); // restore interrupted status
+                        }
                     }
+                    Controller.UPLOAD_FILE_MAP.remove(UploadTask.this.myFileName, UploadTask.this.myUploadFile);
                 }
                 return null;
             }

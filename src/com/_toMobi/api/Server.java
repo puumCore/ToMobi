@@ -27,9 +27,9 @@ import static spark.Spark.port;
 public class Server extends WatchDog {
 
     /**
-     * Accessible url is <a href=http://localhost:3781/toMobi/api><strong>Core URL</strong></a> <br>
+     * Accessible url is <a href=http://localhost:3781/toMobi/api/download><strong>Core URL</strong></a> <br>
      * <br>
-     * When a connection is force closed by a remote host, the following explains why<br>
+     * <strong>When a connection is force closed by a remote host, the following explains why:</strong><br>
      * From HTTP 1.1, keep-alive is enabled by default. You would need to close the connection if you don't want it to be reused explicitly when dealing with HTTP 1.1.<br>
      * <br>
      * For 1.0, an header is what you set for this "Connection: Keep-alive" This only intimates the server that you want to reuse the connection. When under stress or for other reasons, server might choose to act differently as explained below.<br>
@@ -58,7 +58,7 @@ public class Server extends WatchDog {
      * // Increase default max connection per route to 20<br>
      * cm.setDefaultMaxPerRoute(20);<br>
      * // Increase max connections for localhost:80 to 50<br>
-     * HttpHost localhost = new HttpHost("locahost", 80);<br>
+     * HttpHost localhost = new HttpHost("localhost", 80);<br>
      * cm.setMaxPerRoute(new HttpRoute(localhost), 50);<br>
      * <br>
      * CloseableHttpClient httpClient = HttpClients.custom()<br>
@@ -98,11 +98,10 @@ public class Server extends WatchDog {
 
         get(CONTEXT_PATH.concat("/:fileName"), ((request, response) -> {
             String fileName = request.params(":fileName");
-            System.out.println("fileName_BF = " + fileName);
             fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.name());
-            System.out.println("get:fileName = " + fileName);
+            fileName = fileName.replace("_", " ");
             response.status(HttpURLConnection.HTTP_OK);
-            response.type("*/*");
+            response.type("file/*");
             try {
                 if (Controller.UPLOAD_FILE_MAP.containsKey(fileName)) {
                     final UploadFile modifiedUploadFile = Controller.UPLOAD_FILE_MAP.get(fileName);
