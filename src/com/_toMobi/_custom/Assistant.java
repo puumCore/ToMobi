@@ -195,7 +195,6 @@ public abstract class Assistant {
 
     String get_slash_for_my_os() {
         String OS = System.getProperty("os.name").toLowerCase();
-        System.out.println("OS = " + OS);
         if (OS.contains("win")) {
             //windows
             return "\\";

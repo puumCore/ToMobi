@@ -33,6 +33,7 @@ public class Controller extends WatchDog implements Initializable {
 
     public static final Map<String, UploadFile> UPLOAD_FILE_MAP = new TreeMap<>();
     private String recentDirectory = null;
+
     @FXML
     private Label ipAddressLbl;
 

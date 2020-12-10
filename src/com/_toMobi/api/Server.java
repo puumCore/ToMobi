@@ -85,7 +85,6 @@ public class Server extends WatchDog {
                 } else {
                     jsonObject.add("result", jsonArray);
                     jsonObject.add("info", new Gson().toJsonTree("Use the urls to download the files", String.class));
-
                 }
                 response.status(HttpURLConnection.HTTP_OK);
                 return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(jsonObject, JsonObject.class)));
@@ -99,35 +98,48 @@ public class Server extends WatchDog {
         get(CONTEXT_PATH.concat("/:fileName"), ((request, response) -> {
             String fileName = request.params(":fileName");
             fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.name());
-            fileName = fileName.replace("_", " ");
-            response.status(HttpURLConnection.HTTP_OK);
-            response.type("file/*");
-            try {
-                if (Controller.UPLOAD_FILE_MAP.containsKey(fileName)) {
-                    final UploadFile modifiedUploadFile = Controller.UPLOAD_FILE_MAP.get(fileName);
-                    String duplicateFileName = Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.stream().filter(fileName::equals).findAny().orElse(null);
-                    if (duplicateFileName == null) {
-                        Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.add(fileName);
-                    }
-                    DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(response.raw().getOutputStream()));
-                    response.raw().setContentLengthLong((long) modifiedUploadFile.getSourceSize());
-                    DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(modifiedUploadFile.getFilePath()))));
-                    byte[] buffer = new byte[8192];
-                    int count;
-                    while ((count = dataInputStream.read(buffer)) > 0) {
-                        dataOutputStream.write(buffer, 0, count);
-                        modifiedUploadFile.setByteSent(modifiedUploadFile.getByteSent() + buffer.length);
-                        Controller.UPLOAD_FILE_MAP.replace(modifiedUploadFile.getName(), modifiedUploadFile);
-                    }
-                    dataInputStream.close();
-                    dataOutputStream.close();
-                    return HttpURLConnection.HTTP_OK;
+            if (Controller.UPLOAD_FILE_MAP.size() > 0) {
+                if (!Controller.UPLOAD_FILE_MAP.containsKey(fileName)) {
+                    fileName = fileName.replace("_", " ");
                 }
-                response.type("application/json");
-                return new Gson().toJson(new StandardResponse(StatusResponse.WARNING, "Reasons:" +
-                        "  1.No such file exits." +
-                        "  2.The file has been already uploaded." +
-                        "  3.The file has a bad name, remove special characters from the file and retry."));
+            }
+            response.status(HttpURLConnection.HTTP_OK);
+            try {
+                if (Controller.UPLOAD_FILE_MAP.size() > 0) {
+                    if (Controller.UPLOAD_FILE_MAP.containsKey(fileName)) {
+                        response.type("file/*");
+                        final UploadFile modifiedUploadFile = Controller.UPLOAD_FILE_MAP.get(fileName);
+                        String duplicateFileName = Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.stream().filter(fileName::equals).findAny().orElse(null);
+                        if (duplicateFileName == null) {
+                            Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.add(fileName);
+                        }
+                        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(response.raw().getOutputStream()));
+                        response.raw().setContentLengthLong((long) modifiedUploadFile.getSourceSize());
+                        DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(modifiedUploadFile.getFilePath()))));
+                        byte[] buffer = new byte[8192];
+                        int count;
+                        while ((count = dataInputStream.read(buffer)) > 0) {
+                            dataOutputStream.write(buffer, 0, count);
+                            modifiedUploadFile.setByteSent(modifiedUploadFile.getByteSent() + buffer.length);
+                            Controller.UPLOAD_FILE_MAP.replace(modifiedUploadFile.getName(), modifiedUploadFile);
+                        }
+                        dataInputStream.close();
+                        dataOutputStream.close();
+                        return HttpURLConnection.HTTP_OK;
+                    } else {
+                        response.type("application/json");
+                        return new Gson().toJson(new StandardResponse(StatusResponse.WARNING, "A > Reasons:" +
+                                "\n  1.No such file exits." +
+                                "\n  2.The file has been already uploaded." +
+                                "\n  3.The file has a bad name, remove special characters from the file and retry."));
+                    }
+                } else {
+                    response.type("application/json");
+                    return new Gson().toJson(new StandardResponse(StatusResponse.WARNING, "B > Reasons:" +
+                            "\n  1.No such file exits." +
+                            "\n  2.The file has been already uploaded." +
+                            "\n  3.The file has a bad name, remove special characters from the file and retry."));
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
                 new Thread(stack_trace_printing(exception)).start();

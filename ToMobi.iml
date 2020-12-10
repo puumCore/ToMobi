@@ -13,10 +13,10 @@
     <orderEntry type="library" exported="" name="fontawesomefx-8.9" level="application" />
     <orderEntry type="library" exported="" name="annotations-17.0.0" level="application" />
     <orderEntry type="library" exported="" name="jfoenix-8.0.8" level="application" />
-    <orderEntry type="library" exported="" name="commons-lang3-3.11" level="application" />
-    <orderEntry type="library" exported="" name="commons-io-2.6" level="application" />
-    <orderEntry type="library" exported="" name="slf4j" level="application" />
-    <orderEntry type="library" exported="" name="spark-core JAR 2.9" level="application" />
+    <orderEntry type="library" exported="" name="spark-core 2.9.1 maven" level="application" />
+    <orderEntry type="library" exported="" name="SL4J" level="application" />
+    <orderEntry type="library" exported="" name="commons-io-2.6_COPY_FILES_FROM_PLACE_TO_PLACE" level="application" />
+    <orderEntry type="library" name="GEN RANDOM WORDS" level="application" />
     <orderEntry type="library" name="zxing from maven" level="application" />
   </component>
 </module>
