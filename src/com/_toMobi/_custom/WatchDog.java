@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,14 +20,12 @@ import java.util.Calendar;
 
 /**
  * @author Mandela aka puumInc
- * @version 1.1.2
  */
-
 public class WatchDog extends Assistant {
 
     private final String PATH_TO_ERROR_FOLDER = Main.RESOURCE_PATH.getAbsolutePath() + "\\_watchDog\\_error\\";
 
-    @NotNull
+
     @Contract(value = "_ -> new", pure = true)
     protected final Runnable stack_trace_printing(Exception exception) {
         return () -> write_stack_trace(exception);
@@ -71,8 +68,8 @@ public class WatchDog extends Assistant {
         }
     }
 
-    @NotNull
-    protected final Alert programmer_error(@NotNull Object object) {
+
+    protected final Alert programmer_error(Object object) {
         Exception exception = (Exception) object;
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.initOwner(Main.stage);
@@ -96,11 +93,11 @@ public class WatchDog extends Assistant {
         return alert;
     }
 
-    private @NotNull String gate_date_for_file_name() {
+    private String gate_date_for_file_name() {
         return new SimpleDateFormat("dd-MMM-yyyy").format(Calendar.getInstance().getTime()).replaceAll("-", " ");
     }
 
-    @NotNull
+
     protected String time_stamp() {
         return get_date() + " at " + new SimpleDateFormat("HH:mm:ss:SSS").format(Calendar.getInstance().getTime());
     }
@@ -123,22 +120,18 @@ public class WatchDog extends Assistant {
                 programmer_error(exception).show();
             }
         } else {
-            warning_message("Information!", "\n".concat(message)).graphic(null).showInformation();
+            success_notification(message).show();
         }
     }
 
-    protected final void success_notification(String about) {
-        try {
-            SystemTray systemTray = SystemTray.getSystemTray();
-            java.awt.image.BufferedImage bufferedImage = ImageIO.read(getClass().getResource("/com/_toMobi/_images/_icons/icons8_Ok_48px.png"));
-            TrayIcon trayIcon = new TrayIcon(bufferedImage);
-            trayIcon.setImageAutoSize(true);
-            systemTray.add(trayIcon);
-            trayIcon.displayMessage("Success", about, TrayIcon.MessageType.NONE);
-        } catch (IOException | AWTException exception) {
-            exception.printStackTrace();
-            programmer_error(exception).show();
-        }
+    protected Notifications success_notification(String about) {
+        Image image = new Image("/com/_toMobi/_images/_icons/icons8_Ok_48px.png");
+        return Notifications.create()
+                .title("Success")
+                .text(about)
+                .graphic(new ImageView(image))
+                .hideAfter(Duration.seconds(8))
+                .position(Pos.TOP_RIGHT);
     }
 
     protected final Notifications error_message(String title, String text) {

@@ -50,7 +50,6 @@ public class Controller extends WatchDog implements Initializable {
                 fileChooser.setInitialDirectory(file);
             }
         }
-        //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ZIP files only", "*.zip"));
         final List<File> selectedFiles = fileChooser.showOpenMultipleDialog(Main.stage);
         if (selectedFiles == null) {
             error_message("Invalid directory!", "Sadly no directory was selected to save the selected media").show();
