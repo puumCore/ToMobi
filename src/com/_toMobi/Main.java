@@ -15,7 +15,7 @@ import java.io.File;
 public class Main extends Application {
 
     public static File RESOURCE_PATH = new File(System.getenv("JAVAFX_DEV_APP_HOME").concat("\\_to_mobi"));
-    private double xOffset,yOffset;
+    private double xOffset, yOffset;
     public static Stage stage;
 
 

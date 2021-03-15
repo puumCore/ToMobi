@@ -5,6 +5,7 @@ import com._toMobi.Main;
 import com._toMobi._custom.WatchDog;
 import com._toMobi._object.UploadFile;
 import com._toMobi.api.Server;
+import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -12,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.jetbrains.annotations.Contract;
@@ -33,8 +33,9 @@ public class Controller extends WatchDog implements Initializable {
 
     public static final Map<String, UploadFile> UPLOAD_FILE_MAP = new TreeMap<>();
     private String recentDirectory = null;
+
     @FXML
-    private Label ipAddressLbl;
+    private JFXTextField ipAddressTF;
 
     @FXML
     private VBox waitingBox;
@@ -58,7 +59,7 @@ public class Controller extends WatchDog implements Initializable {
         }
         for (File selectedFile : selectedFiles) {
             if (the_file_has_zero_bytes(selectedFile)) {
-                error_message("Hmmh, a bad file found!", "A file has zero bytes and it will be ignored, meanwhile stay tuned for more info").show();
+                error_message("Hmm, a bad file found!", "A file has zero bytes and it will be ignored, meanwhile stay tuned for more info").show();
                 error_message("DETAILS", selectedFile.getName().concat(" has zero bytes.")).show();
             } else {
                 try {
@@ -105,12 +106,12 @@ public class Controller extends WatchDog implements Initializable {
                 while (true) {
                     try {
                         final String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
-                        if (!ipAddressLbl.getText().trim().contains(ipV4)) {
-                            Platform.runLater(() -> ipAddressLbl.setText("http://".concat(ipV4).concat(":" + Spark.port()).concat("/toMobi/api/download")));
+                        if (!ipAddressTF.getText().trim().contains(ipV4)) {
+                            Platform.runLater(() -> ipAddressTF.setText("http://".concat(ipV4).concat(":" + Spark.port()).concat("/toMobi/api/download")));
                         }
                         Thread.sleep(500);
                     } catch (UnknownHostException e) {
-                        Platform.runLater(() -> ipAddressLbl.setText("Host Address was not found!"));
+                        Platform.runLater(() -> ipAddressTF.setText("Host Address was not found!"));
                     } catch (InterruptedException | SocketException e) {
                         e.printStackTrace();
                         new Thread(stack_trace_printing(e)).start();

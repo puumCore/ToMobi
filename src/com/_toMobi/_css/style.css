@@ -56,8 +56,24 @@
 }
 
 .choose_buttons {
-    -fx-font-family: 'Montserrat Semibold';
+    -fx-font-family: 'Montserrat SemiBold';
     -fx-font-size: 16px;
+}
+
+.input_text {
+    -fx-font-family: 'Montserrat Medium';
+    -fx-font-size: 14px;
+    -fx-text-fill: #1D1A1A;
+    -fx-padding: 0 17 0 17;
+}
+
+.jfx-text-field{
+    -jfx-focus-color: transparent;
+    -jfx-unfocus-color: transparent;
+}
+
+.jfx-text-field{
+    -fx-accent: #1D1A1A;
 }
 
 .text-field,

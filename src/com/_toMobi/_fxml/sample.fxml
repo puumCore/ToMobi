@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -43,7 +43,7 @@
                   </StackPane>
                </content>
             </ScrollPane>
-            <Label id="ip" fx:id="ipAddressLbl" alignment="CENTER" layoutY="135.0" prefHeight="30.0" prefWidth="400.0" />
+            <JFXTextField fx:id="ipAddressTF" alignment="CENTER" editable="false" layoutY="114.0" prefHeight="44.0" prefWidth="400.0" styleClass="input_text" />
          </children>
       </AnchorPane>
    </children>
