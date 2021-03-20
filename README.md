@@ -1,2 +1,2 @@
 # ToMobi
- Functions like Dukto
+Functions almost like Dukto
