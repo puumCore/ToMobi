@@ -21,7 +21,6 @@ import spark.Spark;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -52,13 +51,14 @@ public class Controller extends WatchDog implements Initializable {
         }
         final List<File> selectedFiles = fileChooser.showOpenMultipleDialog(Main.stage);
         if (selectedFiles == null) {
-            error_message("Invalid directory!", "Sadly no directory was selected to save the selected media").show();
+            error_message("Invalid directory!", "Sadly no directory to a file was Selected").show();
             event.consume();
             return;
         }
         for (File selectedFile : selectedFiles) {
             if (the_file_has_zero_bytes(selectedFile)) {
-                error_message("Hmm, a bad file found!", "A file has zero bytes and it will be ignored, meanwhile stay tuned for more info").show();
+                error_message("Hmm, a bad file found!",
+                        "A file has zero bytes and it will be ignored, meanwhile stay tuned for more info").show();
                 error_message("DETAILS", selectedFile.getName().concat(" has zero bytes.")).show();
             } else {
                 try {
@@ -73,7 +73,6 @@ public class Controller extends WatchDog implements Initializable {
         }
         event.consume();
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,7 +110,10 @@ public class Controller extends WatchDog implements Initializable {
                         Thread.sleep(500);
                     } catch (UnknownHostException e) {
                         Platform.runLater(() -> ipAddressTF.setText("Host Address was not found!"));
-                    } catch (InterruptedException | SocketException e) {
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    } catch (Exception e) {
                         e.printStackTrace();
                         new Thread(stack_trace_printing(e)).start();
                         Platform.runLater(() -> programmer_error(e).show());
@@ -129,7 +131,7 @@ public class Controller extends WatchDog implements Initializable {
         uploadFile.setFilePath(filePath);
         uploadFile.setSourceSize(get_size_of_the_selected_file(new File(filePath)));
         if (Controller.UPLOAD_FILE_MAP.containsKey(uploadFile.getName())) {
-            warning_message("Can't continue!", "The file is already at the waiting bay").show();
+            warning_message("Duplicate Found!", uploadFile.getName().concat(" has already been selected")).show();
             return;
         }
         try {

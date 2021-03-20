@@ -158,7 +158,7 @@ public class UploadTask extends WatchDog implements Initializable {
                 }
                 if (!readyToShutDown.get()) {
                     double megabytes = 0;
-                    while (megabytes <= TOTAL_SIZE_IN_MB) {
+                    while (megabytes < TOTAL_SIZE_IN_MB) {
                         if (readyToShutDown.get()) {
                             break;
                         }
@@ -176,6 +176,7 @@ public class UploadTask extends WatchDog implements Initializable {
                             Thread.currentThread().interrupt(); // restore interrupted status
                         }
                     }
+                    Platform.runLater(() -> statusLbl.setText("Upload Complete ;)"));
                     Controller.UPLOAD_FILE_MAP.remove(UploadTask.this.myFileName, UploadTask.this.myUploadFile);
                 }
                 return null;

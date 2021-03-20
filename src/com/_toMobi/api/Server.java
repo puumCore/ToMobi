@@ -115,7 +115,7 @@ public class Server extends WatchDog {
                         }
                         DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(response.raw().getOutputStream()));
                         response.raw().setContentLengthLong((long) modifiedUploadFile.getSourceSize());
-                        DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(modifiedUploadFile.getFilePath()))));
+                        DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(modifiedUploadFile.getFilePath())));
                         byte[] buffer = new byte[8192];
                         int count;
                         while ((count = dataInputStream.read(buffer)) > 0) {

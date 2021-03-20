@@ -120,7 +120,7 @@ public class WatchDog extends Assistant {
                 programmer_error(exception).show();
             }
         } else {
-            success_notification(message).show();
+            success_notification(message).graphic(null).title("Info").show();
         }
     }
 
