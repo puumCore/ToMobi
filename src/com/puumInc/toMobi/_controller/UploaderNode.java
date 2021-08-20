@@ -1,9 +1,9 @@
-package com._toMobi._controller;
+package com.puumInc.toMobi._controller;
 
 import animatefx.animation.SlideOutRight;
-import com._toMobi._custom.WatchDog;
-import com._toMobi._object.UploadFile;
-import com._toMobi.api.Server;
+import com.puumInc.toMobi._custom.WatchDog;
+import com.puumInc.toMobi._model.UploadFile;
+import com.puumInc.toMobi.api.Server;
 import com.jfoenix.controls.JFXProgressBar;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -32,7 +32,7 @@ import static spark.Spark.port;
  * @version 1.0.0
  */
 
-public class UploadTask extends WatchDog implements Initializable {
+public class UploaderNode extends WatchDog implements Initializable {
 
     protected static String fileName;
     private final AtomicBoolean readyToShutDown = new AtomicBoolean(false);
@@ -100,7 +100,7 @@ public class UploadTask extends WatchDog implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.myFileName = UploadTask.fileName;
+        this.myFileName = UploaderNode.fileName;
         this.myUploadFile = Controller.UPLOAD_FILE_MAP.get(this.myFileName);
         infoLbl.setText(this.myUploadFile.getName());
 
@@ -142,12 +142,12 @@ public class UploadTask extends WatchDog implements Initializable {
                         updateProgress(0, 1);
                         String fileRequested = Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.stream()
                                 .filter(nameOfAFileThatIsReadyForUpload -> nameOfAFileThatIsReadyForUpload
-                                        .equals(UploadTask.this.myFileName))
+                                        .equals(UploaderNode.this.myFileName))
                                 .findAny().orElse(null);
                         if (fileRequested != null) {
                             if (Controller.UPLOAD_FILE_MAP.containsKey(fileRequested)) {
-                                if (Controller.UPLOAD_FILE_MAP.get(UploadTask.this.myFileName).getName().equals(fileRequested)) {
-                                    Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.remove(UploadTask.this.myFileName);
+                                if (Controller.UPLOAD_FILE_MAP.get(UploaderNode.this.myFileName).getName().equals(fileRequested)) {
+                                    Server.NAMES_OF_FILES_REQUESTED_TO_BE_UPLOADED.remove(UploaderNode.this.myFileName);
                                     break;
                                 }
                             }
@@ -164,8 +164,8 @@ public class UploadTask extends WatchDog implements Initializable {
                         }
                         try {
                             Thread.sleep(500);
-                            UploadTask.this.myUploadFile.setByteSent(Controller.UPLOAD_FILE_MAP.get(UploadTask.this.myFileName).getByteSent());
-                            double bytes = UploadTask.this.myUploadFile.getByteSent();
+                            UploaderNode.this.myUploadFile.setByteSent(Controller.UPLOAD_FILE_MAP.get(UploaderNode.this.myFileName).getByteSent());
+                            double bytes = UploaderNode.this.myUploadFile.getByteSent();
                             double kilobytes = (bytes / 1024);
                             megabytes = (kilobytes / 1024);
                             updateProgress(megabytes, TOTAL_SIZE_IN_MB);
@@ -177,7 +177,7 @@ public class UploadTask extends WatchDog implements Initializable {
                         }
                     }
                     Platform.runLater(() -> statusLbl.setText("Upload Complete ;)"));
-                    Controller.UPLOAD_FILE_MAP.remove(UploadTask.this.myFileName, UploadTask.this.myUploadFile);
+                    Controller.UPLOAD_FILE_MAP.remove(UploaderNode.this.myFileName, UploaderNode.this.myUploadFile);
                 }
                 return null;
             }

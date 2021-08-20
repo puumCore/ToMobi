@@ -1,0 +1,36 @@
+body {
+    background-color: #313131;
+}
+
+.downloadTitles {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color:lightblue;   
+}
+
+#myLogo {
+    width: 30px;
+    height: 30px;
+}
+
+h3 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #0089fa;
+    font-size: 22px;
+}
+
+button {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: lightblue;
+    color: #313131;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 8px;
+    border-radius: 8px;
+    margin-left: 18px;
+}
+
+.fileDiv {
+    margin: 20px;
+}

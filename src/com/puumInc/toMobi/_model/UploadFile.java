@@ -1,4 +1,4 @@
-package com._toMobi._object;
+package com.puumInc.toMobi._model;
 
 import java.io.Serializable;
 

@@ -13,7 +13,7 @@
 
 <!--suppress JavaFxDefaultTag -->
 
-<StackPane prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../_css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com._toMobi._controller.Controller">
+<StackPane prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../_css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puumInc.toMobi._controller.Controller">
    <children>
       <ImageView fitHeight="700.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
          <image>

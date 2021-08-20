@@ -1,6 +1,6 @@
-package com._toMobi._custom;
+package com.puumInc.toMobi._custom;
 
-import com._toMobi.Main;
+import com.puumInc.toMobi.Main;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -110,7 +110,7 @@ public class WatchDog extends Assistant {
         if (get_slash_for_my_os().equals("\\")) { //if its a windows os
             try {
                 SystemTray systemTray = SystemTray.getSystemTray();
-                java.awt.image.BufferedImage bufferedImage = ImageIO.read(getClass().getResource("/com/_toMobi/_images/_other/toMobi.png"));
+                java.awt.image.BufferedImage bufferedImage = ImageIO.read(getClass().getResource("/_images/_other/toMobi.png"));
                 TrayIcon trayIcon = new TrayIcon(bufferedImage);
                 trayIcon.setImageAutoSize(true);
                 systemTray.add(trayIcon);
@@ -125,7 +125,7 @@ public class WatchDog extends Assistant {
     }
 
     protected Notifications success_notification(String about) {
-        Image image = new Image("/com/_toMobi/_images/_icons/icons8_Ok_48px.png");
+        Image image = new Image("/_images/_icons/icons8_Ok_48px.png");
         return Notifications.create()
                 .title("Success")
                 .text(about)
@@ -135,7 +135,7 @@ public class WatchDog extends Assistant {
     }
 
     protected final Notifications error_message(String title, String text) {
-        Image image = new Image("/com/_toMobi/_images/_icons/icons8_Close_Window_48px.png");
+        Image image = new Image("/_images/_icons/icons8_Close_Window_48px.png");
         return Notifications.create()
                 .title(title)
                 .text(text)
@@ -145,7 +145,7 @@ public class WatchDog extends Assistant {
     }
 
     protected final Notifications warning_message(String title, String text) {
-        Image image = new Image("/com/_toMobi/_images/_icons/icons8_Error_48px.png");
+        Image image = new Image("/_images/_icons/icons8_Error_48px.png");
         return Notifications.create()
                 .title(title)
                 .text(text)

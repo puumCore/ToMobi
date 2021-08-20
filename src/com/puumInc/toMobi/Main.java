@@ -1,4 +1,4 @@
-package com._toMobi;
+package com.puumInc.toMobi;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +21,7 @@ public class Main extends Application {
 
     @Override
     public void start(@NotNull Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/com/_toMobi/_fxml/sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/_fxml/sample.fxml"));
         Scene scene = new Scene(root);
         scene.setOnMousePressed(event2 -> {
             xOffset = event2.getSceneX();
@@ -36,7 +36,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
         primaryStage.initStyle(StageStyle.DECORATED);
-        primaryStage.getIcons().add(new Image(getClass().getResource("/com/_toMobi/_images/_other/toMobi.png").toExternalForm()));
+        primaryStage.getIcons().add(new Image(getClass().getResource("/_images/_other/toMobi.png").toExternalForm()));
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(event -> System.exit(0));
         primaryStage.show();

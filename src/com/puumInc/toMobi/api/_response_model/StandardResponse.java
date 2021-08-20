@@ -1,4 +1,4 @@
-package com._toMobi.api._response_model;
+package com.puumInc.toMobi.api._response_model;
 
 import com.google.gson.JsonElement;
 

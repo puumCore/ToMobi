@@ -1,7 +1,7 @@
-package com._toMobi._custom;
+package com.puumInc.toMobi._custom;
 
-import com._toMobi.Main;
-import com._toMobi._controller.Controller;
+import com.puumInc.toMobi.Main;
+import com.puumInc.toMobi._controller.Controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.zxing.BarcodeFormat;
@@ -9,6 +9,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.puumInc.toMobi._model.UFile;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,13 +25,16 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author edgar
  */
 public abstract class Assistant {
 
+    protected final String WEB_CONTEXT_PATH = "/toMobi/web";
     protected final String CONTEXT_PATH = "/toMobi/api/download";
 
 
@@ -42,6 +46,17 @@ public abstract class Assistant {
             jsonArray.add(new Gson().toJsonTree(downloadUrl, String.class));
         }
         return jsonArray;
+    }
+
+    protected final List<UFile> get_list_of_pending_uFiles(String myIp) {
+        List<UFile> uFileList = new ArrayList<>();
+        for (String string : Controller.UPLOAD_FILE_MAP.keySet()) {
+            UFile uFile = new UFile();
+            uFile.setName(string);
+            uFile.setUrl(String.format("http://%s:%d%s/%s", myIp, Spark.port(), CONTEXT_PATH, string));
+            uFileList.add(uFile);
+        }
+        return uFileList;
     }
 
     protected Alert show_qr_image_for_upload(File imageFile) throws FileNotFoundException {

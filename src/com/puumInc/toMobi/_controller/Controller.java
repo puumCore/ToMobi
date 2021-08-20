@@ -1,10 +1,10 @@
-package com._toMobi._controller;
+package com.puumInc.toMobi._controller;
 
 import animatefx.animation.SlideInLeft;
-import com._toMobi.Main;
-import com._toMobi._custom.WatchDog;
-import com._toMobi._object.UploadFile;
-import com._toMobi.api.Server;
+import com.puumInc.toMobi.Main;
+import com.puumInc.toMobi._custom.WatchDog;
+import com.puumInc.toMobi._model.UploadFile;
+import com.puumInc.toMobi.api.Server;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -105,7 +105,7 @@ public class Controller extends WatchDog implements Initializable {
                     try {
                         final String ipV4 = get_first_nonLoopback_address(true, false).getHostAddress();
                         if (!ipAddressTF.getText().trim().contains(ipV4)) {
-                            Platform.runLater(() -> ipAddressTF.setText("http://".concat(ipV4).concat(":" + Spark.port()).concat("/toMobi/api/download")));
+                            Platform.runLater(() -> ipAddressTF.setText("http://".concat(ipV4).concat(":" + Spark.port()).concat(WEB_CONTEXT_PATH)));
                         }
                         Thread.sleep(500);
                     } catch (UnknownHostException e) {
@@ -136,8 +136,8 @@ public class Controller extends WatchDog implements Initializable {
         }
         try {
             Controller.UPLOAD_FILE_MAP.put(uploadFile.getName(), uploadFile);
-            UploadTask.fileName = uploadFile.getName();
-            final Node node = FXMLLoader.load(getClass().getResource("/com/_toMobi/_fxml/upload.fxml"));
+            UploaderNode.fileName = uploadFile.getName();
+            final Node node = FXMLLoader.load(getClass().getResource("/_fxml/upload.fxml"));
             Platform.runLater(() -> {
                 waitingBox.getChildren().add(node);
                 new SlideInLeft(node).play();
